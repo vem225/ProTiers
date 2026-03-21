@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ProTiers - Minecraft Skill Tiers</title>
+    <style>
+        /* Базовые настройки и цвета */
+        :root {
+            --bg-main: #0d0d0d;
+            --bg-card: #1a1a1a;
+            --bg-hover: #2a2a2a;
+            --text-main: #ffffff;
+            --text-muted: #a0a0a0;
+            --accent: #3b82f6;
+            --gold: #ffd700;
+            --silver: #c0c0c0;
+            --bronze: #cd7f32;
+        }
+
+        body {
+            margin: 0;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: var(--bg-main);
+            color: var(--text-main);
+            overflow-x: hidden;
+        }
+
+        /* Навигационная панель */
+        header {
+            background-color: var(--bg-card);
+            padding: 15px 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid #222;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .logo span {
+            color: var(--accent);
+        }
+
+        .nav-icons {
+            display: flex;
+            gap: 15px;
+        }
+
+        .nav-item {
+            padding: 8px 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: 0.3s;
+            font-size: 14px;
+            font-weight: 600;
+            color: var(--text-muted);
+            background: transparent;
+            border: none;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background-color: var(--bg-hover);
+            color: var(--text-main);
+        }
+
+        .user-actions {
+            display: flex;
+            gap: 15px;
+        }
+
+        /* Контейнеры для вкладок */
+        .tab-content {
+            display: none;
+            padding: 40px;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+
+        .tab-content.active {
+            display: block;
+            animation: fadeIn 0.4s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* --- СТИЛИ ЛИДЕРБОРДА --- */
+        .top-3-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .leader-card {
+            background-color: var(--bg-card);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.5);
+        }
+
+        /* Цвета для топ-3 */
+        .leader-card:nth-child(1) { border-top: 4px solid var(--gold); background: linear-gradient(180deg, rgba(255,215,0,0.1) 0%, var(--bg-card) 100%); }
+        .leader-card:nth-child(2) { border-top: 4px solid var(--silver); background: linear-gradient(180deg, rgba(192,192,192,0.1) 0%, var(--bg-card) 100%);}
+        .leader-card:nth-child(3) { border-top: 4px solid var(--bronze); background: linear-gradient(180deg, rgba(205,127,50,0.1) 0%, var(--bg-card) 100%);}
+
+        .player-avatar {
+            width: 80px;
+            height: 80px;
+            background-color: #333;
+            border-radius: 8px;
+            margin: 0 auto 15px;
+            /* Здесь будут 3D скины */
+        }
+
+        .player-name {
+            font-size: 20px;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .player-score {
+            color: var(--text-muted);
+            font-size: 14px;
+        }
+
+        .badges {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 15px;
+        }
+
+        .badge {
+            width: 30px;
+            height: 30px;
+            border-radius: 6px;
+            background-color: #333;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 10px;
+            font-weight: bold;
+        }
+
+        /* --- СТИЛИ ТИРОВ (СТРАНИЦА BEASTS) --- */
+        .tier-header {
+            background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 30px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .tier-header h1 {
+            margin: 0;
+            font-family: 'Courier New', Courier, monospace; /* Придает квадратный/пиксельный вид */
+            letter-spacing: 2px;
+        }
+
+        /* Горизонтальный скролл для 14 колонок */
+        .tiers-container {
+            display: flex;
+            gap: 15px;
+            overflow-x: auto;
+            padding-bottom: 20px;
+        }
+
+        /* Стилизация скроллбара */
+        .tiers-container::-webkit-scrollbar {
+            height: 8px;
+        }
+        .tiers-container::-webkit-scrollbar-track {
+            background: var(--bg-main);
+        }
+        .tiers-container::-webkit-scrollbar-thumb {
+            background: var(--bg-card);
+            border-radius: 4px;
+        }
+
+        .tier-column {
+            min-width: 200px;
+            background-color: var(--bg-card);
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .tier-title {
+            text-align: center;
+            padding: 15px;
+            font-weight: bold;
+            font-size: 18px;
+            border-bottom: 2px solid var(--bg-main);
+            font-family: 'Courier New', Courier, monospace;
+        }
+
+        /* Цвета для разных тиров (градиент от крутого к слабому) */
+        .tier-SSS .tier-title { color: #ff0055; text-shadow: 0 0 10px rgba(255,0,85,0.5); }
+        .tier-SS .tier-title { color: #ff3300; }
+        .tier-S-plus .tier-title { color: #ff8800; }
+        .tier-A .tier-title { color: #ffcc00; }
+        .tier-F .tier-title { color: #555; }
+
+        .tier-list {
+            padding: 10px;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .player-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px;
+            border-radius: 6px;
+            background-color: rgba(255,255,255,0.03);
+            transition: 0.2s;
+            cursor: pointer;
+        }
+
+        .player-row:hover {
+            background-color: rgba(255,255,255,0.1);
+        }
+
+        .player-head {
+            width: 24px;
+            height: 24px;
+            background-color: #555;
+            border-radius: 4px;
+        }
+
+        .player-row span {
+            font-size: 14px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">
+            <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path></svg>
+            Pro<span>Tiers</span>
+        </div>
+        
+        <nav class="nav-icons">
+            <button class="nav-item active" onclick="switchTab('leaderboard')">Лидерборд</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Beasts</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Nether Pot</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Op</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Diamond Pot</button>
+            <button class="nav-item" onclick="switchTab('beasts')">SMP</button>
+            <button class="nav-item" onclick="switchTab('beasts')">UHC</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Mace</button>
+            <button class="nav-item" onclick="switchTab('beasts')">Vanilla</button>
+        </nav>
+
+        <div class="user-actions">
+            <button class="nav-item">🔍 Поиск</button>
+            <button class="nav-item">👤 Профиль</button>
+        </div>
+    </header>
+
+    <main id="leaderboard" class="tab-content active">
+        <div class="top-3-grid">
+            <div class="leader-card">
+                <div class="player-avatar"></div>
+                <div class="player-name">Vespeeks</div>
+                <div class="player-score">113 очков</div>
+                <div style="color: var(--silver); font-weight: bold; margin-top: 10px;">2 место</div>
+                <div class="badges">
+                    <div class="badge" style="background: #a855f7;">LT3</div>
+                    <div class="badge" style="background: #ef4444;">HT3</div>
+                    <div class="badge" style="background: #eab308;">LT3</div>
+                </div>
+            </div>
+
+            <div class="leader-card" style="transform: scale(1.05); z-index: 2;">
+                <div class="player-avatar"></div>
+                <div class="player-name">strafikk</div>
+                <div class="player-score">132 очка</div>
+                <div style="color: var(--gold); font-weight: bold; margin-top: 10px;">1 место</div>
+                <div class="badges">
+                    <div class="badge" style="background: #a855f7;">LT3</div>
+                    <div class="badge" style="background: #ef4444;">RLT2</div>
+                    <div class="badge" style="background: #eab308;">RHT2</div>
+                    <div class="badge" style="background: #22c55e;">HT1</div>
+                </div>
+            </div>
+
+            <div class="leader-card">
+                <div class="player-avatar"></div>
+                <div class="player-name">biteer192</div>
+                <div class="player-score">100 очков</div>
+                <div style="color: var(--bronze); font-weight: bold; margin-top: 10px;">3 место</div>
+                <div class="badges">
+                    <div class="badge" style="background: #a855f7;">HT1</div>
+                    <div class="badge" style="background: #ef4444;">LT3</div>
+                    <div class="badge" style="background: #eab308;">LT3</div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <main id="beasts" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;">
+                <span style="font-size: 30px;">⚔️</span> BEASTS TIERS
+            </h1>
+            <div>
+                <button class="nav-item" style="background: rgba(0,0,0,0.5);">Пройти тестирование</button>
+            </div>
+        </div>
+
+        <div class="tiers-container" id="tiers-wrapper">
+            </div>
+    </main>
+
+    <script>
+        // Функция переключения вкладок
+        function switchTab(tabId) {
+            // Скрываем все вкладки
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            // Показываем нужную
+            document.getElementById(tabId).classList.add('active');
+
+            // Убираем класс active у всех кнопок меню, кроме нажатой (упрощенно)
+            document.querySelectorAll('header .nav-item').forEach(btn => {
+                btn.classList.remove('active');
+            });
+            event.target.classList.add('active');
+        }
+
+        // Массив всех твоих 14 тиров от лучшего к худшему
+        const tiersList = [
+            "SSS", "SS", "S+", "S-", "A+", "A-", "B+", "B-", "C+", "C-", "D+", "D-", "F+", "F-"
+        ];
+
+        // Фейковые данные игроков для наглядности
+        const fakePlayers = ["07Marolek07", "Agress1ve__", "c0tofh", "Erdmann", "FalconsBest", "Wanda07", "LEPTAIMS", "godVax1vee"];
+
+        // Генерация колонок тиров
+        const tiersContainer = document.getElementById('tiers-wrapper');
+
+        tiersList.forEach(tier => {
+            // Создаем колонку
+            const col = document.createElement('div');
+            col.className = 'tier-column';
+            
+            // Задаем цвет заголовка в зависимости от крутости тира
+            if(tier.includes('S')) col.classList.add('tier-SSS');
+            else if(tier.includes('A')) col.classList.add('tier-A');
+            else if(tier.includes('F')) col.classList.add('tier-F');
+
+            // Заголовок тира
+            const title = document.createElement('div');
+            title.className = 'tier-title';
+            title.textContent = 'TIER ' + tier;
+            col.appendChild(title);
+
+            // Список игроков в этом тире (генерируем случайно от 3 до 8 игроков для примера)
+            const list = document.createElement('div');
+            list.className = 'tier-list';
+            
+            const playersCount = Math.floor(Math.random() * 6) + 3; 
+            for(let i=0; i < playersCount; i++) {
+                const randomPlayer = fakePlayers[Math.floor(Math.random() * fakePlayers.length)];
+                list.innerHTML += `
+                    <div class="player-row">
+                        <div class="player-head"></div>
+                        <span>${randomPlayer}</span>
+                    </div>
+                `;
+            }
+            col.appendChild(list);
+
+            tiersContainer.appendChild(col);
+        });
+    </script>
+
+</body>
+</html>

@@ -113,7 +113,6 @@
             box-shadow: 0 4px 20px rgba(0,0,0,0.5);
         }
 
-        /* Цвета для топ-3 */
         .leader-card:nth-child(1) { border-top: 4px solid var(--gold); background: linear-gradient(180deg, rgba(255,215,0,0.1) 0%, var(--bg-card) 100%); }
         .leader-card:nth-child(2) { border-top: 4px solid var(--silver); background: linear-gradient(180deg, rgba(192,192,192,0.1) 0%, var(--bg-card) 100%);}
         .leader-card:nth-child(3) { border-top: 4px solid var(--bronze); background: linear-gradient(180deg, rgba(205,127,50,0.1) 0%, var(--bg-card) 100%);}
@@ -124,7 +123,6 @@
             background-color: #333;
             border-radius: 8px;
             margin: 0 auto 15px;
-            /* Здесь будут 3D скины */
         }
 
         .player-name {
@@ -158,7 +156,7 @@
             font-weight: bold;
         }
 
-        /* --- СТИЛИ ТИРОВ (СТРАНИЦА BEASTS) --- */
+        /* --- СТИЛИ ТИРОВ --- */
         .tier-header {
             background: linear-gradient(90deg, #1e3a8a 0%, #3b82f6 100%);
             padding: 20px;
@@ -171,11 +169,10 @@
 
         .tier-header h1 {
             margin: 0;
-            font-family: 'Courier New', Courier, monospace; /* Придает квадратный/пиксельный вид */
+            font-family: 'Courier New', Courier, monospace;
             letter-spacing: 2px;
         }
 
-        /* Горизонтальный скролл для 14 колонок */
         .tiers-container {
             display: flex;
             gap: 15px;
@@ -183,7 +180,6 @@
             padding-bottom: 20px;
         }
 
-        /* Стилизация скроллбара */
         .tiers-container::-webkit-scrollbar {
             height: 8px;
         }
@@ -212,10 +208,9 @@
             font-family: 'Courier New', Courier, monospace;
         }
 
-        /* Цвета для разных тиров (градиент от крутого к слабому) */
         .tier-SSS .tier-title { color: #ff0055; text-shadow: 0 0 10px rgba(255,0,85,0.5); }
         .tier-SS .tier-title { color: #ff3300; }
-        .tier-S-plus .tier-title { color: #ff8800; }
+        .tier-S .tier-title { color: #ff8800; }
         .tier-A .tier-title { color: #ffcc00; }
         .tier-F .tier-title { color: #555; }
 
@@ -224,6 +219,7 @@
             display: flex;
             flex-direction: column;
             gap: 8px;
+            min-height: 50px; /* Чтобы пустая колонка не схлопывалась */
         }
 
         .player-row {
@@ -262,15 +258,15 @@
         </div>
         
         <nav class="nav-icons">
-            <button class="nav-item active" onclick="switchTab('leaderboard')">Лидерборд</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Beasts</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Nether Pot</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Op</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Diamond Pot</button>
-            <button class="nav-item" onclick="switchTab('beasts')">SMP</button>
-            <button class="nav-item" onclick="switchTab('beasts')">UHC</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Mace</button>
-            <button class="nav-item" onclick="switchTab('beasts')">Vanilla</button>
+            <button class="nav-item active" onclick="switchTab(event, 'leaderboard')">Лидерборд</button>
+            <button class="nav-item" onclick="switchTab(event, 'beasts')">Beasts</button>
+            <button class="nav-item" onclick="switchTab(event, 'nether_pot')">Nether Pot</button>
+            <button class="nav-item" onclick="switchTab(event, 'op')">Op</button>
+            <button class="nav-item" onclick="switchTab(event, 'diamond_pot')">Diamond Pot</button>
+            <button class="nav-item" onclick="switchTab(event, 'smp')">SMP</button>
+            <button class="nav-item" onclick="switchTab(event, 'uhc')">UHC</button>
+            <button class="nav-item" onclick="switchTab(event, 'mace')">Mace</button>
+            <button class="nav-item" onclick="switchTab(event, 'vanilla')">Vanilla</button>
         </nav>
 
         <div class="user-actions">
@@ -325,18 +321,246 @@
             <h1 style="display: flex; align-items: center; gap: 15px;">
                 <span style="font-size: 30px;">⚔️</span> BEASTS TIERS
             </h1>
-            <div>
-                <button class="nav-item" style="background: rgba(0,0,0,0.5);">Пройти тестирование</button>
+            <div><button class="nav-item" style="background: rgba(0,0,0,0.5);">Пройти тестирование</button></div>
+        </div>
+<div class="tiers-container">
+    <div class="tier-column tier-SSS">
+        <div class="tier-title">TIER SSS</div>
+        <div class="tier-list" id="SSS_Beasts">
+            <div class="player-row">
+                <div class="player-head"></div>
+                <span>vem225</span>
             </div>
         </div>
+    </div>
 
-        <div class="tiers-container" id="tiers-wrapper">
+    <div class="tier-column tier-SS">
+        <div class="tier-title">TIER SS</div>
+        <div class="tier-list" id="SS_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-S">
+        <div class="tier-title">TIER S+</div>
+        <div class="tier-list" id="S+_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-S">
+        <div class="tier-title">TIER S-</div>
+        <div class="tier-list" id="S-_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-A">
+        <div class="tier-title">TIER A+</div>
+        <div class="tier-list" id="A+_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-A">
+        <div class="tier-title">TIER A-</div>
+        <div class="tier-list" id="A-_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER B+</div>
+        <div class="tier-list" id="B+_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER B-</div>
+        <div class="tier-list" id="B-_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER C+</div>
+        <div class="tier-list" id="C+_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER C-</div>
+        <div class="tier-list" id="C-_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER D+</div>
+        <div class="tier-list" id="D+_Beasts"></div>
+    </div>
+
+    <div class="tier-column">
+        <div class="tier-title">TIER D-</div>
+        <div class="tier-list" id="D-_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-F">
+        <div class="tier-title">TIER F+</div>
+        <div class="tier-list" id="F+_Beasts"></div>
+    </div>
+
+    <div class="tier-column tier-F">
+        <div class="tier-title">TIER F-</div>
+        <div class="tier-list" id="F-_Beasts">
+            <div class="player-row">
+                <div class="player-head"></div>
+                <span>grazzypozitive</span>
             </div>
+        </div>
+    </div>
+</div>
+
+    <main id="nether_pot" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🔥</span> NETHER POT TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_NetherPot"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_NetherPot"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_NetherPot"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_NetherPot"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_NetherPot"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_NetherPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_NetherPot"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_NetherPot"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_NetherPot"></div></div>
+        </div>
+    </main>
+
+    <main id="op" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🍎</span> OP TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_OP"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_OP"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_OP"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_OP"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_OP"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_OP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_OP"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_OP"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_OP"></div></div>
+        </div>
+    </main>
+
+    <main id="diamond_pot" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">💎</span> DIAMOND POT TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_DiamondPot"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_DiamondPot"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_DiamondPot"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_DiamondPot"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_DiamondPot"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_DiamondPot"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_DiamondPot"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_DiamondPot"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_DiamondPot"></div></div>
+        </div>
+    </main>
+
+    <main id="smp" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🌍</span> SMP TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_SMP"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_SMP"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_SMP"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_SMP"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_SMP"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_SMP"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_SMP"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_SMP"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_SMP"></div></div>
+        </div>
+    </main>
+
+    <main id="uhc" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🍖</span> UHC TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_UHC"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_UHC"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_UHC"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_UHC"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_UHC"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_UHC"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_UHC"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_UHC"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_UHC"></div></div>
+        </div>
+    </main>
+
+    <main id="mace" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🔨</span> MACE TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_Mace"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_Mace"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_Mace"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_Mace"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_Mace"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_Mace"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_Mace"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_Mace"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_Mace"></div></div>
+        </div>
+    </main>
+
+    <main id="vanilla" class="tab-content">
+        <div class="tier-header">
+            <h1 style="display: flex; align-items: center; gap: 15px;"><span style="font-size: 30px;">🌿</span> VANILLA TIERS</h1>
+        </div>
+        <div class="tiers-container">
+            <div class="tier-column tier-SSS"><div class="tier-title">TIER SSS</div><div class="tier-list" id="SSS_Vanilla"></div></div>
+            <div class="tier-column tier-SS"><div class="tier-title">TIER SS</div><div class="tier-list" id="SS_Vanilla"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S+</div><div class="tier-list" id="S+_Vanilla"></div></div>
+            <div class="tier-column tier-S"><div class="tier-title">TIER S-</div><div class="tier-list" id="S-_Vanilla"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A+</div><div class="tier-list" id="A+_Vanilla"></div></div>
+            <div class="tier-column tier-A"><div class="tier-title">TIER A-</div><div class="tier-list" id="A-_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B+</div><div class="tier-list" id="B+_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER B-</div><div class="tier-list" id="B-_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C+</div><div class="tier-list" id="C+_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER C-</div><div class="tier-list" id="C-_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D+</div><div class="tier-list" id="D+_Vanilla"></div></div>
+            <div class="tier-column"><div class="tier-title">TIER D-</div><div class="tier-list" id="D-_Vanilla"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F+</div><div class="tier-list" id="F+_Vanilla"></div></div>
+            <div class="tier-column tier-F"><div class="tier-title">TIER F-</div><div class="tier-list" id="F-_Vanilla"></div></div>
+        </div>
     </main>
 
     <script>
-        // Функция переключения вкладок
-        function switchTab(tabId) {
+        function switchTab(event, tabId) {
             // Скрываем все вкладки
             document.querySelectorAll('.tab-content').forEach(tab => {
                 tab.classList.remove('active');
@@ -344,58 +568,13 @@
             // Показываем нужную
             document.getElementById(tabId).classList.add('active');
 
-            // Убираем класс active у всех кнопок меню, кроме нажатой (упрощенно)
+            // Убираем класс active у всех кнопок меню
             document.querySelectorAll('header .nav-item').forEach(btn => {
                 btn.classList.remove('active');
             });
-            event.target.classList.add('active');
+            // Добавляем класс active нажатой кнопке
+            event.currentTarget.classList.add('active');
         }
-
-        // Массив всех твоих 14 тиров от лучшего к худшему
-        const tiersList = [
-            "SSS", "SS", "S+", "S-", "A+", "A-", "B+", "B-", "C+", "C-", "D+", "D-", "F+", "F-"
-        ];
-
-        // Фейковые данные игроков для наглядности
-        const fakePlayers = ["07Marolek07", "Agress1ve__", "c0tofh", "Erdmann", "FalconsBest", "Wanda07", "LEPTAIMS", "godVax1vee"];
-
-        // Генерация колонок тиров
-        const tiersContainer = document.getElementById('tiers-wrapper');
-
-        tiersList.forEach(tier => {
-            // Создаем колонку
-            const col = document.createElement('div');
-            col.className = 'tier-column';
-            
-            // Задаем цвет заголовка в зависимости от крутости тира
-            if(tier.includes('S')) col.classList.add('tier-SSS');
-            else if(tier.includes('A')) col.classList.add('tier-A');
-            else if(tier.includes('F')) col.classList.add('tier-F');
-
-            // Заголовок тира
-            const title = document.createElement('div');
-            title.className = 'tier-title';
-            title.textContent = 'TIER ' + tier;
-            col.appendChild(title);
-
-            // Список игроков в этом тире (генерируем случайно от 3 до 8 игроков для примера)
-            const list = document.createElement('div');
-            list.className = 'tier-list';
-            
-            const playersCount = Math.floor(Math.random() * 6) + 3; 
-            for(let i=0; i < playersCount; i++) {
-                const randomPlayer = fakePlayers[Math.floor(Math.random() * fakePlayers.length)];
-                list.innerHTML += `
-                    <div class="player-row">
-                        <div class="player-head"></div>
-                        <span>${randomPlayer}</span>
-                    </div>
-                `;
-            }
-            col.appendChild(list);
-
-            tiersContainer.appendChild(col);
-        });
     </script>
 
 </body>
